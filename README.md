@@ -1,3 +1,3 @@
 # TestHook
 
-A xposed module which can hook common java crypto methods.
+A xposed module which can hook common Java crypto methods.
