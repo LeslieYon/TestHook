@@ -23,7 +23,7 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
-      run: ./gradlew build
+      run: ./gradlew assembleRelease
 
     - name: Pre Release
       uses: "marvinpinto/action-automatic-releases@latest"
@@ -33,6 +33,6 @@ jobs:
         title: "Development Build"
         prerelease: true
         files: |
-          app\build\outputs\apk\debug\*.apk
+          app/build/outputs/apk/release/*.apk
           LICENSE
       id: "automatic_releases"
