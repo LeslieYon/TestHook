@@ -10,8 +10,11 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 
 import javax.crypto.Cipher;
 import javax.crypto.Mac;
+import java.io.InputStream;
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
+import java.security.cert.CertificateFactory;
 
 public class test implements IXposedHookLoadPackage {
 
@@ -338,5 +341,37 @@ public class test implements IXposedHookLoadPackage {
         } catch (Exception e) {
             Log.e("LeslieYon", "RSAPrivateKeySpec Error: " + e.getMessage());
         }
+
+        /*try {
+            XposedBridge.hookAllMethods(XposedHelpers.findClass("java.security.cert.CertificateFactory", lpparam.classLoader),
+                    "generateCertificate",
+                    new XC_MethodHook() {
+                        @Override
+                        protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                            Log.e("LeslieYon", "Stack:", new Throwable("stack dump"));
+                            if (param.args.length != 1) return;
+                            CertificateFactory certificate = (CertificateFactory) param.thisObject;
+                            String keyType = certificate.getType();
+                            InputStream inStream = (InputStream) param.args[0];
+                            inStream.mark(0);
+                            inStream.read();
+                            inStream.reset();
+                            inStream.mark(0);
+                            int len = inStream.available();
+                            byte[] key_bytes = new byte[len];
+                            inStream.read(key_bytes, 0, len);
+                            inStream.reset();
+                            inStream.close();
+                            String key = new String(key_bytes, StandardCharsets.UTF_8);
+                            Log.d("LeslieYon", keyType + " Certificate len: " + len);
+                            Log.d("LeslieYon", keyType + " Certificate: \n" + key);
+                            Log.d("LeslieYon", keyType + " CertificateHex: " + byteArray2HexString(key_bytes));
+                            Log.d("LeslieYon", "=======================================================================");
+                        }
+                    });
+        } catch (Exception e) {
+            Log.e("LeslieYon", "generateCertificate Error: " + e.getMessage());
+        }*/
+
     }
 }
